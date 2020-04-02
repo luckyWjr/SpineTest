@@ -152,8 +152,6 @@ public class CharacterBaseController : MonoBehaviour
         AnimationController.Skill1Anim = config.Skill1Anim;
         AnimationController.Skill2Anim = config.Skill2Anim;
         AnimationController.Skill3Anim = config.Skill3Anim;
-
-        BoneController.ShootBoneName = config.ShootBone;
     }
     
     public void InitDataByConfig(CharacterConfig config)

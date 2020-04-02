@@ -48,7 +48,4 @@ public class SpineAssetConfig : MonoBehaviour
     [SpineAnimation()]public string Skill1Anim;
     [SpineAnimation()]public string Skill2Anim;
     [SpineAnimation()]public string Skill3Anim;
-    
-    [Header("Bone Setting")]
-    [SpineBone()]public string ShootBone;
 }

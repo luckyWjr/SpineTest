@@ -50,7 +50,6 @@ public class SpineAssetConfigEditor : Editor
                     config.Skill1Anim = null;
                     config.Skill2Anim = null;
                     config.Skill3Anim = null;
-                    config.ShootBone = null;
                 }
             }
             else
