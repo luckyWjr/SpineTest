@@ -65,17 +65,22 @@ public class SpineTestPanelController : MonoBehaviour
         mAnimNameList.Clear();
         foreach (var anim in mCharacterBaseController.SkeletonData.Animations)
             mAnimNameList.Add(new Dropdown.OptionData(anim.Name));
-
         AnimDropdown.options = mAnimNameList;
     }
 
     void UpdateSkinData()
     {
         mSkinNameList.Clear();
+        int defaultSkinIndex = 0;
         Skin[] array = mCharacterBaseController.SkeletonData.Skins.Items;
         for (int i = 0; i < array.Length; i++)
+        {
             mSkinNameList.Add(new Dropdown.OptionData(array[i].Name));
+            if (Config.DefaultSkinArray != null && array[i].Name == Config.DefaultSkinArray[0])
+                defaultSkinIndex = i;
+        }
         SkinDropdown.options = mSkinNameList;
+        SkinDropdown.value = defaultSkinIndex;
     }
 
     void ChangeAnim(int value)

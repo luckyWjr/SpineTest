@@ -940,7 +940,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: "\u9605\u8BFB\u6839\u76EE\u5F55\u4E0B\u7684\u300ASpineTest\u4F7F\u7528\u6587\u6863\u300B\nEnvironment/SpineRoot
+  m_Text: "\u9605\u8BFBDocuments\u76EE\u5F55\u4E0B\u7684\u6587\u6863\nEnvironment/SpineRoot
     \u914D\u7F6E\u89D2\u8272\u79FB\u52A8\u901F\u5EA6\u52A8\u753B\u7B49\n\nWASD\u79FB\u52A8\uFF0C\u6309\u4F4FShift\u8DD1\r\n\u7A7A\u683C\u952E\u8DF3\uFF0C\u6570\u5B57\u952E123\u91CA\u653E\u6280\u80FD\r"
 --- !u!222 &219476419
 CanvasRenderer:
@@ -1804,7 +1804,6 @@ MonoBehaviour:
   Skill1Anim: shoot
   Skill2Anim: 
   Skill3Anim: 
-  ShootBone: 
 --- !u!1 &761931114
 GameObject:
   m_ObjectHideFlags: 0
