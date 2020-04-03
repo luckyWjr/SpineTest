@@ -28,12 +28,8 @@ public class CharacterBoneController : ICharacterController
     public void Update()
     {
     }
-
-    public void Enable()
-    {
-    }
-
-    public void Disable()
+    
+    public void Destroy()
     {
     }
 

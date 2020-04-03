@@ -35,7 +35,7 @@ public class SpineAssetConfig : MonoBehaviour
     [SpineSkin()] public string[] DefaultSkinArray;
     
     //动作相关设置
-    public float MoveSpeed = 5;
+    public float WalkSpeed = 5;
     public float RunSpeed = 10;
     public EForward DefaultForward;
     

@@ -73,9 +73,7 @@ public class CharacterBaseController : MonoBehaviour
     public CharacterSkinController SkinController;
     public CharacterBoneController BoneController;
     public BloodController BloodController;
-
-    bool mIsDead;
-
+    
     void Awake()
     {
         AnimationController = new CharacterAnimationController(this);
@@ -92,7 +90,6 @@ public class CharacterBaseController : MonoBehaviour
         ActionController.Start();
         SkinController.Start();
         BoneController.Start();
-        mIsDead = false;
     }
 
     public void CreateBloodObject(GameObject prefab, Transform parent)
@@ -110,7 +107,7 @@ public class CharacterBaseController : MonoBehaviour
         AnimationController.Update();
         ActionController.Update();
 
-        if (CharacterController != null && !mIsDead)
+        if (CharacterController != null && ActionController.CurrentActionState != ECharacterActionState.Dead)
         {
             Ray ray = new Ray(mTransform.position + Vector3.up * 3, Vector3.down);
             if (Physics.Raycast(ray, out RaycastHit hit, 5.5f))
@@ -121,19 +118,13 @@ public class CharacterBaseController : MonoBehaviour
 
     void Dead()
     {
-        mIsDead = true;
-        OnDisable();
-        AnimationController.SetOnceAnimation(AnimationController.DeadAnim);
+        ActionController.Dead();
+        InputManager.Instance.Disable();
     }
     
-    void OnEnable()
+    void Destroy()
     {
-        ActionController.Enable();
-    }
-    
-    void OnDisable()
-    {
-        ActionController.Disable();
+        ActionController.Destroy();
     }
 
     public void InitDataByConfig(SpineAssetConfig config)
@@ -141,7 +132,7 @@ public class CharacterBaseController : MonoBehaviour
         SkinController.DefaultSkinArray = config.DefaultSkinArray;
         
         ActionController.DefaultForward = config.DefaultForward;
-        ActionController.MoveSpeed = config.MoveSpeed;
+        ActionController.WalkSpeed = config.WalkSpeed;
         ActionController.RunSpeed = config.RunSpeed;
 
         AnimationController.IdleAnim = config.IdleAnim;
@@ -159,7 +150,7 @@ public class CharacterBaseController : MonoBehaviour
         SkinController.DefaultSkinArray = config.DefaultSkinArray;
         
         ActionController.DefaultForward = config.DefaultForward;
-        ActionController.MoveSpeed = config.WalkSpeed;
+        ActionController.WalkSpeed = config.WalkSpeed;
         ActionController.RunSpeed = config.RunSpeed;
         ActionController.JumpSpeed = config.JumpSpeed;
 

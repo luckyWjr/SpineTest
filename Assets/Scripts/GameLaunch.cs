@@ -13,7 +13,23 @@ public class GameLaunch : MonoBehaviour
 
     void Start()
     {
-        GameObject character = CharacterManager.Instance.CreateCharacter(CharacterPrefab, SpawnPoint.position, BloodPrefab);
+        CharacterManager.Instance.Start();
+        InputManager.Instance.Start();
+        
+        GameObject character = CharacterManager.Instance.CreateCharacter(CharacterPrefab, SpawnPoint.position, BloodPrefab, true);
         CameraFollow.Target = character.transform;
+    }
+
+    void Update()
+    {
+        float deltaTime = Time.deltaTime;
+        CharacterManager.Instance.Update(deltaTime);
+        InputManager.Instance.Update(deltaTime);
+    }
+
+    void OnDestroy()
+    {
+        CharacterManager.Instance.Destroy();
+        InputManager.Instance.Destroy();
     }
 }

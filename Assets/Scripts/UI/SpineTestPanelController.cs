@@ -30,6 +30,7 @@ public class SpineTestPanelController : MonoBehaviour
         mCharacterBaseController = Config.SpineRoot.GetComponentInChildren<CharacterBaseController>();
         if (mCharacterBaseController != null)
         {
+            CharacterManager.Instance.TestToSetMine(mCharacterBaseController);
             SetUIEvent();
             if (Config.ReadMethod == EReadEquipMethod.ReadSprite)
                 ReadAllSpriteInFolder();
@@ -49,7 +50,16 @@ public class SpineTestPanelController : MonoBehaviour
             mCharacterBaseController.InitDataByConfig(Config);
             UpdateAnimData();
             UpdateSkinData();
+            
+            CharacterManager.Instance.Start();
+            InputManager.Instance.Start();
         }
+    }
+
+    void Update()
+    {
+        CharacterManager.Instance.Update(Time.deltaTime);
+        InputManager.Instance.Update(Time.deltaTime);
     }
 
     void SetUIEvent()

@@ -99,11 +99,7 @@ public class CharacterSkinController : ICharacterController
     {
     }
 
-    public void Enable()
-    {
-    }
-
-    public void Disable()
+    public void Destroy()
     {
     }
 }

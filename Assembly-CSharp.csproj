@@ -64,13 +64,16 @@
      <Compile Include="Assets\Scripts\Character\CharacterBaseController.cs" />
      <Compile Include="Assets\Scripts\Character\CharacterBoneController.cs" />
      <Compile Include="Assets\Scripts\Character\CharacterConfig.cs" />
-     <Compile Include="Assets\Scripts\Character\CharacterManager.cs" />
      <Compile Include="Assets\Scripts\Character\CharacterSkinController.cs" />
      <Compile Include="Assets\Scripts\Character\ICharacterController.cs" />
      <Compile Include="Assets\Scripts\CharacterInputAction.cs" />
      <Compile Include="Assets\Scripts\Data\EquipData.cs" />
      <Compile Include="Assets\Scripts\Data\SpineAssetConfig.cs" />
      <Compile Include="Assets\Scripts\GameLaunch.cs" />
+     <Compile Include="Assets\Scripts\Manager\BaseManager.cs" />
+     <Compile Include="Assets\Scripts\Manager\CharacterManager.cs" />
+     <Compile Include="Assets\Scripts\Manager\IManger.cs" />
+     <Compile Include="Assets\Scripts\Manager\InputManager.cs" />
      <Compile Include="Assets\Scripts\Tool\CameraFollow.cs" />
      <Compile Include="Assets\Scripts\Tool\OnScreenStickAndButton.cs" />
      <Compile Include="Assets\Scripts\Tool\SpineBoneGroundConstraint.cs" />

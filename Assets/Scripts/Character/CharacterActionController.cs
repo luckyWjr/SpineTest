@@ -1,8 +1,5 @@
-﻿using System.IO;
-using Spine;
+﻿using Spine;
 using UnityEngine;
-using UnityEngine.InputSystem;
-using UnityEngine.PlayerLoop;
 
 public enum ECharacterActionState
 {
@@ -11,191 +8,149 @@ public enum ECharacterActionState
     Walk,
     Run,
     Jump,
+    Dead,
 }
 
 public class CharacterActionController : ICharacterController
 {
-    public float MoveSpeed = 5;
+    public float WalkSpeed = 5;
     public float RunSpeed = 10;
     public float JumpSpeed = 5;
-    public float ShootInterval = 0.2f;
     public EForward DefaultForward;
 
     CharacterBaseController mBaseController;
     CharacterAnimationController mAnimationController;
     Transform mTransform;
-    CharacterInputAction mActionController;
 
-    ECharacterActionState mLastActionState;
     ECharacterActionState mCurrentActionState;
+    public ECharacterActionState CurrentActionState => mCurrentActionState;
     
     Vector3 mVelocity = default(Vector3);
-    bool mIsMove = false;
-    bool mIsRun = false;
     bool mIsShoot = false;
     float mShootTime = 0;
+    float ShootInterval = 0.2f;
 
     public CharacterActionController(CharacterBaseController controller)
     {
         mBaseController = controller;
         mAnimationController = mBaseController.AnimationController;
         mTransform = mBaseController.Transform;
-        InitInputAction();
-
-        mLastActionState = ECharacterActionState.None;
     }
 
     public void Start()
     {
-        Idle();
+        SetNextState(ECharacterActionState.Idle);
     }
-
-    void InitInputAction()
-    {
-        mActionController = new CharacterInputAction();
-
-        mActionController.Player.Move.started += MoveStart;
-        mActionController.Player.Move.performed += MovePerformed;
-        mActionController.Player.Move.canceled += MoveEnd;
-        mActionController.Player.Run.started += RunStart;
-        mActionController.Player.Run.canceled += RunEnd;
-        mActionController.Player.Jump.performed += Jump;
-        mActionController.Player.Shoot.started += ShootStart;
-        mActionController.Player.Shoot.canceled += ShootCancel;
-        mActionController.Player.Skill1.performed += Skill1;
-        mActionController.Player.Skill2.performed += Skill2;
-        mActionController.Player.Skill3.performed += Skill3;
-    }
-
-    void UpdateAnimation()
-    {
-        if (mCurrentActionState != mLastActionState)
-        {
-            switch (mCurrentActionState)
-            {
-                case ECharacterActionState.Idle:
-                    mAnimationController.SetLoopAnimation(mAnimationController.IdleAnim);
-                    break;
-                case ECharacterActionState.Walk:
-                    mAnimationController.SetLoopAnimation(mAnimationController.WalkAnim);
-                    break;
-                case ECharacterActionState.Run:
-                    mAnimationController.SetLoopAnimation(mAnimationController.RunAnim);
-                    break;
-                case ECharacterActionState.Jump:
-                    mAnimationController.SetOnceAnimation(mAnimationController.JumpAnim, e => { mCurrentActionState = ECharacterActionState.Idle; });
-                    break;
-            }
-
-            mLastActionState = mCurrentActionState;
-        }
-    }
-
 
     public void Update()
     {
+        if (mCurrentActionState == ECharacterActionState.Dead) return;
         float timeDelta = Time.deltaTime;
         if (mBaseController.CharacterController == null)
         {
-            if (mIsMove)
-            {
-                var scaledMoveSpeed = MoveSpeed;
-                if (mIsRun)
-                    scaledMoveSpeed = RunSpeed;
-                Vector2 v = mActionController.Player.Move.ReadValue<Vector2>();
-                var move = Quaternion.Euler(0, mTransform.eulerAngles.y, 0) * new Vector3(v.x, v.y);
-                mTransform.position += move * (scaledMoveSpeed * timeDelta);
-            }
+            var move = Quaternion.Euler(0, mTransform.eulerAngles.y, 0) * new Vector3(mVelocity.x,0);
+            mTransform.position += move * timeDelta;
         }
         else
         {
             bool isGrounded = mBaseController.CharacterController.isGrounded;
             Vector3 gravityDeltaVelocity = Physics.gravity * timeDelta;
-            if (mCurrentActionState == ECharacterActionState.Jump)
-                mVelocity.y = JumpSpeed;
             if (!isGrounded)
                 mVelocity += gravityDeltaVelocity;
-
-            mVelocity.x = 0;
-            if (mIsMove)
-                mVelocity.x = mActionController.Player.Move.ReadValue<Vector2>().x * (mIsRun ? RunSpeed : MoveSpeed);
-
+            
             mBaseController.CharacterController.Move(mVelocity * timeDelta);
         }
         
         if (mIsShoot)
-            Shoot(mActionController.Player.Shoot.ReadValue<Vector2>(), timeDelta);
-
-        if (mIsMove && mCurrentActionState != ECharacterActionState.Jump)
-            mCurrentActionState = mIsRun ? ECharacterActionState.Run : ECharacterActionState.Walk;
-        UpdateAnimation();
+            Shoot(timeDelta);
     }
 
-    void Idle()
+    public void UpdateForward(float x)
     {
+        if(x.Equals(0)) return;
+        if ((x < 0 && DefaultForward == EForward.Left) || (x > 0 && DefaultForward == EForward.Right))
+            mBaseController.Skeleton.ScaleX = 1;
+        else
+            mBaseController.Skeleton.ScaleX = -1;
+    }
+
+    void SetNextState(ECharacterActionState state)
+    {
+        if (state == mCurrentActionState) return;
+        if (mCurrentActionState == ECharacterActionState.Dead) return;
         if (mCurrentActionState == ECharacterActionState.Jump) return;
+        mCurrentActionState = state;
+        UpdateAnimationWithState();
+    }
+
+    void UpdateAnimationWithState()
+    {
+        switch (mCurrentActionState)
+        {
+            case ECharacterActionState.Idle:
+                mAnimationController.SetLoopAnimation(mAnimationController.IdleAnim);
+                break;
+            case ECharacterActionState.Walk:
+                mAnimationController.SetLoopAnimation(mAnimationController.WalkAnim);
+                break;
+            case ECharacterActionState.Run:
+                mAnimationController.SetLoopAnimation(mAnimationController.RunAnim);
+                break;
+            case ECharacterActionState.Jump:
+                mAnimationController.SetOnceAnimation(mAnimationController.JumpAnim, JumpEnd);
+                break;
+            case ECharacterActionState.Dead:
+                mAnimationController.SetOnceAnimation(mAnimationController.DeadAnim);
+                break;
+        }
+    }
+
+    public void SetMoveSpeed(float value, bool isRun)
+    {
+        if (value.Equals(0))
+        {
+            SetNextState(ECharacterActionState.Idle);
+            mVelocity.x = 0;
+            return;
+        }
+        if (isRun)
+        {
+            mVelocity.x = value * RunSpeed;
+            SetNextState(ECharacterActionState.Run);
+        }
+        else
+        {
+            mVelocity.x = value * WalkSpeed;
+            SetNextState(ECharacterActionState.Walk);
+        }
+    }
+
+    public void Jump()
+    {
+        mVelocity.y = JumpSpeed;
+        SetNextState(ECharacterActionState.Jump);
+    }
+
+    void JumpEnd(TrackEntry trackEntry)
+    {
+        mVelocity.y = 0;
         mCurrentActionState = ECharacterActionState.Idle;
+        UpdateAnimationWithState();
     }
 
-    void MoveStart(InputAction.CallbackContext context)
-    {
-        if (context.ReadValue<Vector2>().x == 0) return;
-        mIsMove = true;
-    }
-
-    void MovePerformed(InputAction.CallbackContext context)
-    {
-        Vector2 detail = context.ReadValue<Vector2>();
-        if (detail.x < 0)
-        {
-            if (DefaultForward == EForward.Left)
-                mBaseController.Skeleton.ScaleX = 1;
-            else
-                mBaseController.Skeleton.ScaleX = -1;
-        }
-        else if (detail.x > 0)
-        {
-            if (DefaultForward == EForward.Left)
-                mBaseController.Skeleton.ScaleX = -1;
-            else
-                mBaseController.Skeleton.ScaleX = 1;
-        }
-    }
-
-    void MoveEnd(InputAction.CallbackContext context)
-    {
-        mIsMove = false;
-        Idle();
-    }
-
-    void RunStart(InputAction.CallbackContext context)
-    {
-        mIsRun = true;
-    }
-
-    void RunEnd(InputAction.CallbackContext context)
-    {
-        mIsRun = false;
-    }
-    
-    void Jump(InputAction.CallbackContext context)
-    {
-        mCurrentActionState = ECharacterActionState.Jump;
-    }
-
-    void ShootStart(InputAction.CallbackContext context)
+    public void ShootStart()
     {
         mBaseController.BoneController.ResetShootBone();
         mShootTime = ShootInterval;
         mIsShoot = true;
     }
     
-    void ShootCancel(InputAction.CallbackContext context)
+    public void ShootCancel()
     {
         mIsShoot = false;
     }
 
-    void Shoot(Vector2 value, float time)
+    void Shoot(float time)
     {
         mShootTime += time;
         if (mShootTime >= ShootInterval)
@@ -203,45 +158,45 @@ public class CharacterActionController : ICharacterController
             mAnimationController.SetOnceCombiningAnimation(mAnimationController.ShootAnim);
             mAnimationController.SetAimAnimation();
             mShootTime = 0;
-            
-            if (Mathf.Abs(value.x) >= 0.1f || Mathf.Abs(value.y) >= 0.1f)
-            {
-                var forwardPosition = mBaseController.SkeletonAnim.transform.position +
-                                         new Vector3(value.x * 50, value.y * 50, 0);
-                var shootPoint = mBaseController.SkeletonAnim.transform.InverseTransformPoint(forwardPosition);
-                shootPoint.x *= mBaseController.Skeleton.ScaleX;
-                shootPoint.y *= mBaseController.Skeleton.ScaleY;
-                mBaseController.BoneController.UpdateShootBone(shootPoint);
-            }
         }
     }
 
-    void Skill1(InputAction.CallbackContext context)
+    public void UpdateShootBone(Vector2 value)
+    {
+        if (Mathf.Abs(value.x) >= 0.1f || Mathf.Abs(value.y) >= 0.1f)
+        {
+            var forwardPosition = mBaseController.SkeletonAnim.transform.position +
+                                  new Vector3(value.x * 50, value.y * 50, 0);
+            var shootPoint = mBaseController.SkeletonAnim.transform.InverseTransformPoint(forwardPosition);
+            shootPoint.x *= mBaseController.Skeleton.ScaleX;
+            shootPoint.y *= mBaseController.Skeleton.ScaleY;
+            mBaseController.BoneController.UpdateShootBone(shootPoint);
+        }
+    }
+
+    public void Skill1()
     {
         mAnimationController.SetOnceCombiningAnimation(mAnimationController.Skill1Anim);
     }
 
-    void Skill2(InputAction.CallbackContext context)
+    public void Skill2()
     {
         mAnimationController.SetOnceCombiningAnimation(mAnimationController.Skill2Anim);
     }
 
-    void Skill3(InputAction.CallbackContext context)
+    public void Skill3()
     {
         mAnimationController.SetOnceCombiningAnimation(mAnimationController.Skill3Anim);
     }
-    
-    public void Enable()
-    {
-        mActionController.Enable();
-    }
 
-    public void Disable()
+    public void Dead()
+    {
+        SetNextState(ECharacterActionState.Dead);
+    }
+    
+    public void Destroy()
     {
         mCurrentActionState = ECharacterActionState.None;
-        mIsMove = false;
-        mIsRun = false;
         mIsShoot = false;
-        mActionController.Disable();
     }
 }

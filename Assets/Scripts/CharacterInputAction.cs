@@ -19,7 +19,7 @@ public class @CharacterInputAction : IInputActionCollection, IDisposable
             ""id"": ""e3cc9840-e77e-4541-a34d-230c542be24f"",
             ""actions"": [
                 {
-                    ""name"": ""Move"",
+                    ""name"": ""Walk"",
                     ""type"": ""Value"",
                     ""id"": ""8f4d0cc3-86e6-4c9f-95d9-9b477921a5c2"",
                     ""expectedControlType"": ""Vector2"",
@@ -83,7 +83,7 @@ public class @CharacterInputAction : IInputActionCollection, IDisposable
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
-                    ""action"": ""Move"",
+                    ""action"": ""Walk"",
                     ""isComposite"": true,
                     ""isPartOfComposite"": false
                 },
@@ -94,7 +94,7 @@ public class @CharacterInputAction : IInputActionCollection, IDisposable
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": "";Keyboard&Mouse"",
-                    ""action"": ""Move"",
+                    ""action"": ""Walk"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": true
                 },
@@ -105,7 +105,7 @@ public class @CharacterInputAction : IInputActionCollection, IDisposable
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": "";Keyboard&Mouse"",
-                    ""action"": ""Move"",
+                    ""action"": ""Walk"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": true
                 },
@@ -116,7 +116,7 @@ public class @CharacterInputAction : IInputActionCollection, IDisposable
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": "";Keyboard&Mouse"",
-                    ""action"": ""Move"",
+                    ""action"": ""Walk"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": true
                 },
@@ -127,7 +127,7 @@ public class @CharacterInputAction : IInputActionCollection, IDisposable
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": "";Keyboard&Mouse"",
-                    ""action"": ""Move"",
+                    ""action"": ""Walk"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": true
                 },
@@ -138,7 +138,7 @@ public class @CharacterInputAction : IInputActionCollection, IDisposable
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": ""Gamepad;Keyboard&Mouse"",
-                    ""action"": ""Move"",
+                    ""action"": ""Walk"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 },
@@ -782,7 +782,7 @@ public class @CharacterInputAction : IInputActionCollection, IDisposable
 }");
         // Player
         m_Player = asset.FindActionMap("Player", throwIfNotFound: true);
-        m_Player_Move = m_Player.FindAction("Move", throwIfNotFound: true);
+        m_Player_Walk = m_Player.FindAction("Walk", throwIfNotFound: true);
         m_Player_Run = m_Player.FindAction("Run", throwIfNotFound: true);
         m_Player_Jump = m_Player.FindAction("Jump", throwIfNotFound: true);
         m_Player_Skill1 = m_Player.FindAction("Skill1", throwIfNotFound: true);
@@ -850,7 +850,7 @@ public class @CharacterInputAction : IInputActionCollection, IDisposable
     // Player
     private readonly InputActionMap m_Player;
     private IPlayerActions m_PlayerActionsCallbackInterface;
-    private readonly InputAction m_Player_Move;
+    private readonly InputAction m_Player_Walk;
     private readonly InputAction m_Player_Run;
     private readonly InputAction m_Player_Jump;
     private readonly InputAction m_Player_Skill1;
@@ -861,7 +861,7 @@ public class @CharacterInputAction : IInputActionCollection, IDisposable
     {
         private @CharacterInputAction m_Wrapper;
         public PlayerActions(@CharacterInputAction wrapper) { m_Wrapper = wrapper; }
-        public InputAction @Move => m_Wrapper.m_Player_Move;
+        public InputAction @Walk => m_Wrapper.m_Player_Walk;
         public InputAction @Run => m_Wrapper.m_Player_Run;
         public InputAction @Jump => m_Wrapper.m_Player_Jump;
         public InputAction @Skill1 => m_Wrapper.m_Player_Skill1;
@@ -877,9 +877,9 @@ public class @CharacterInputAction : IInputActionCollection, IDisposable
         {
             if (m_Wrapper.m_PlayerActionsCallbackInterface != null)
             {
-                @Move.started -= m_Wrapper.m_PlayerActionsCallbackInterface.OnMove;
-                @Move.performed -= m_Wrapper.m_PlayerActionsCallbackInterface.OnMove;
-                @Move.canceled -= m_Wrapper.m_PlayerActionsCallbackInterface.OnMove;
+                @Walk.started -= m_Wrapper.m_PlayerActionsCallbackInterface.OnWalk;
+                @Walk.performed -= m_Wrapper.m_PlayerActionsCallbackInterface.OnWalk;
+                @Walk.canceled -= m_Wrapper.m_PlayerActionsCallbackInterface.OnWalk;
                 @Run.started -= m_Wrapper.m_PlayerActionsCallbackInterface.OnRun;
                 @Run.performed -= m_Wrapper.m_PlayerActionsCallbackInterface.OnRun;
                 @Run.canceled -= m_Wrapper.m_PlayerActionsCallbackInterface.OnRun;
@@ -902,9 +902,9 @@ public class @CharacterInputAction : IInputActionCollection, IDisposable
             m_Wrapper.m_PlayerActionsCallbackInterface = instance;
             if (instance != null)
             {
-                @Move.started += instance.OnMove;
-                @Move.performed += instance.OnMove;
-                @Move.canceled += instance.OnMove;
+                @Walk.started += instance.OnWalk;
+                @Walk.performed += instance.OnWalk;
+                @Walk.canceled += instance.OnWalk;
                 @Run.started += instance.OnRun;
                 @Run.performed += instance.OnRun;
                 @Run.canceled += instance.OnRun;
@@ -1079,7 +1079,7 @@ public class @CharacterInputAction : IInputActionCollection, IDisposable
     }
     public interface IPlayerActions
     {
-        void OnMove(InputAction.CallbackContext context);
+        void OnWalk(InputAction.CallbackContext context);
         void OnRun(InputAction.CallbackContext context);
         void OnJump(InputAction.CallbackContext context);
         void OnSkill1(InputAction.CallbackContext context);

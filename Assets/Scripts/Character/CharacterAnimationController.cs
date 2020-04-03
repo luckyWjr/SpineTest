@@ -101,11 +101,7 @@ public class CharacterAnimationController : ICharacterController
         empty.AttachmentThreshold = 1f;
     }
 
-    public void Enable()
-    {
-    }
-
-    public void Disable()
+    public void Destroy()
     {
     }
 }

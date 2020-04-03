@@ -6,7 +6,7 @@
             "id": "e3cc9840-e77e-4541-a34d-230c542be24f",
             "actions": [
                 {
-                    "name": "Move",
+                    "name": "Walk",
                     "type": "Value",
                     "id": "8f4d0cc3-86e6-4c9f-95d9-9b477921a5c2",
                     "expectedControlType": "Vector2",
@@ -70,7 +70,7 @@
                     "interactions": "",
                     "processors": "",
                     "groups": "",
-                    "action": "Move",
+                    "action": "Walk",
                     "isComposite": true,
                     "isPartOfComposite": false
                 },
@@ -81,7 +81,7 @@
                     "interactions": "",
                     "processors": "",
                     "groups": ";Keyboard&Mouse",
-                    "action": "Move",
+                    "action": "Walk",
                     "isComposite": false,
                     "isPartOfComposite": true
                 },
@@ -92,7 +92,7 @@
                     "interactions": "",
                     "processors": "",
                     "groups": ";Keyboard&Mouse",
-                    "action": "Move",
+                    "action": "Walk",
                     "isComposite": false,
                     "isPartOfComposite": true
                 },
@@ -103,7 +103,7 @@
                     "interactions": "",
                     "processors": "",
                     "groups": ";Keyboard&Mouse",
-                    "action": "Move",
+                    "action": "Walk",
                     "isComposite": false,
                     "isPartOfComposite": true
                 },
@@ -114,7 +114,7 @@
                     "interactions": "",
                     "processors": "",
                     "groups": ";Keyboard&Mouse",
-                    "action": "Move",
+                    "action": "Walk",
                     "isComposite": false,
                     "isPartOfComposite": true
                 },
@@ -125,7 +125,7 @@
                     "interactions": "",
                     "processors": "",
                     "groups": "Gamepad;Keyboard&Mouse",
-                    "action": "Move",
+                    "action": "Walk",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },

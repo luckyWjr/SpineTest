@@ -6,8 +6,5 @@ public interface ICharacterController
 {
     void Start();
     void Update();
-
-    void Enable();
-    
-    void Disable();
+    void Destroy();
 }
