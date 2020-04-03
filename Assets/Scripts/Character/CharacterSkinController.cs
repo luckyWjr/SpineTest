@@ -95,7 +95,7 @@ public class CharacterSkinController : ICharacterController
         mBaseController.SkeletonAnim.state.Apply(mBaseController.Skeleton); //skeletonAnimation.Update(0);
     }
 
-    public void Update()
+    public void Update(float deltaTime)
     {
     }
 

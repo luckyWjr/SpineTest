@@ -10,6 +10,9 @@ public class GameLaunch : MonoBehaviour
     public GameObject BloodPrefab;
     public GameObject CharacterPrefab;
     public Transform SpawnPoint;
+    
+    public GameObject EnemyPrefab;
+    public Transform[] EnemySpawnPoint;
 
     void Start()
     {
@@ -18,6 +21,9 @@ public class GameLaunch : MonoBehaviour
         
         GameObject character = CharacterManager.Instance.CreateCharacter(CharacterPrefab, SpawnPoint.position, BloodPrefab, true);
         CameraFollow.Target = character.transform;
+        
+        foreach (var point in EnemySpawnPoint)
+            CharacterManager.Instance.CreateCharacter(EnemyPrefab, point.position, BloodPrefab, false);
     }
 
     void Update()

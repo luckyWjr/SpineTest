@@ -59,6 +59,7 @@
   </ItemGroup>
   <ItemGroup>
      <Compile Include="Assets\Scripts\BloodController.cs" />
+     <Compile Include="Assets\Scripts\Character\CharacterAIController.cs" />
      <Compile Include="Assets\Scripts\Character\CharacterActionController.cs" />
      <Compile Include="Assets\Scripts\Character\CharacterAnimationController.cs" />
      <Compile Include="Assets\Scripts\Character\CharacterBaseController.cs" />

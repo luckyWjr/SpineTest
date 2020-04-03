@@ -303,7 +303,7 @@ MonoBehaviour:
   - default
   WalkSpeed: 4
   RunSpeed: 8
-  JumpSpeed: 8
+  JumpSpeed: 16
   IdleAnim: idle
   WalkAnim: walk
   RunAnim: run

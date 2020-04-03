@@ -86,7 +86,7 @@ public class SpineTestPanelController : MonoBehaviour
         for (int i = 0; i < array.Length; i++)
         {
             mSkinNameList.Add(new Dropdown.OptionData(array[i].Name));
-            if (Config.DefaultSkinArray != null && array[i].Name == Config.DefaultSkinArray[0])
+            if (Config.DefaultSkinArray != null && Config.DefaultSkinArray.Length > 0 && array[i].Name == Config.DefaultSkinArray[0])
                 defaultSkinIndex = i;
         }
         SkinDropdown.options = mSkinNameList;

@@ -22,6 +22,8 @@ public class CharacterManager : BaseManager<CharacterManager>
         mCharacterBaseController.CreateBloodObject(blood, go.transform);
         if (isMine)
             mMine = mCharacterBaseController;
+        else
+            mCharacterBaseController.AddAIController();
         return go;
     }
 

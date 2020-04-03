@@ -72,6 +72,7 @@ public class CharacterBaseController : MonoBehaviour
     public CharacterAnimationController AnimationController;
     public CharacterSkinController SkinController;
     public CharacterBoneController BoneController;
+    public CharacterAIController AIController;
     public BloodController BloodController;
     
     void Awake()
@@ -90,6 +91,12 @@ public class CharacterBaseController : MonoBehaviour
         ActionController.Start();
         SkinController.Start();
         BoneController.Start();
+        AIController?.Start();
+    }
+
+    public void AddAIController()
+    {
+        AIController = new CharacterAIController(this);
     }
 
     public void CreateBloodObject(GameObject prefab, Transform parent)
@@ -104,8 +111,10 @@ public class CharacterBaseController : MonoBehaviour
     
     void Update()
     {
-        AnimationController.Update();
-        ActionController.Update();
+        float deltaTime = Time.deltaTime;
+        AnimationController.Update(deltaTime);
+        ActionController.Update(deltaTime);
+        AIController?.Update(deltaTime);
 
         if (CharacterController != null && ActionController.CurrentActionState != ECharacterActionState.Dead)
         {

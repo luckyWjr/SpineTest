@@ -18,14 +18,14 @@ public class CharacterBoneController : ICharacterController
     
     public void Start()
     {
-        if (ShootBoneName != null)
+        if (!string.IsNullOrEmpty(ShootBoneName))
         {
             mShootBone = mBaseController.Skeleton.FindBone(ShootBoneName);
             mShootBoneDefaultPosition = mShootBone.GetLocalPosition();
         }
     }
 
-    public void Update()
+    public void Update(float deltaTime)
     {
     }
     

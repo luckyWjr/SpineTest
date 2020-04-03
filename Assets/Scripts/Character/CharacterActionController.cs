@@ -42,27 +42,26 @@ public class CharacterActionController : ICharacterController
         SetNextState(ECharacterActionState.Idle);
     }
 
-    public void Update()
+    public void Update(float deltaTime)
     {
         if (mCurrentActionState == ECharacterActionState.Dead) return;
-        float timeDelta = Time.deltaTime;
         if (mBaseController.CharacterController == null)
         {
             var move = Quaternion.Euler(0, mTransform.eulerAngles.y, 0) * new Vector3(mVelocity.x,0);
-            mTransform.position += move * timeDelta;
+            mTransform.position += move * deltaTime;
         }
         else
         {
             bool isGrounded = mBaseController.CharacterController.isGrounded;
-            Vector3 gravityDeltaVelocity = Physics.gravity * timeDelta;
+            Vector3 gravityDeltaVelocity = Physics.gravity * deltaTime;
             if (!isGrounded)
                 mVelocity += gravityDeltaVelocity;
             
-            mBaseController.CharacterController.Move(mVelocity * timeDelta);
+            mBaseController.CharacterController.Move(mVelocity * deltaTime);
         }
         
         if (mIsShoot)
-            Shoot(timeDelta);
+            Shoot(deltaTime);
     }
 
     public void UpdateForward(float x)
@@ -115,12 +114,12 @@ public class CharacterActionController : ICharacterController
         }
         if (isRun)
         {
-            mVelocity.x = value * RunSpeed;
+            mVelocity.x = value > 0 ? RunSpeed : -RunSpeed;
             SetNextState(ECharacterActionState.Run);
         }
         else
         {
-            mVelocity.x = value * WalkSpeed;
+            mVelocity.x = value > 0 ? WalkSpeed : -WalkSpeed;
             SetNextState(ECharacterActionState.Walk);
         }
     }

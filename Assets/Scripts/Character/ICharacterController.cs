@@ -5,6 +5,6 @@ using UnityEngine;
 public interface ICharacterController
 {
     void Start();
-    void Update();
+    void Update(float deltaTime);
     void Destroy();
 }

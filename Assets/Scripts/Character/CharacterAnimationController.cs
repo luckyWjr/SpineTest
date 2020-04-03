@@ -39,7 +39,7 @@ public class CharacterAnimationController : ICharacterController
         mAnimationState = mBaseController.AnimationState;
     }
 
-    public void Update()
+    public void Update(float deltaTime)
     {
         // if (mCurrentSkillTrackEntry != null && mCurrentSkillTrackEntry.IsComplete)
         // {
